@@ -1,28 +1,32 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <router-view></router-view>
+    <NavBar :tabs="tabs"></NavBar>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import NavBar from './components/NavBar.vue'
 
 export default {
   name: 'app',
+
+  data: function(){
+    return {
+      tabs: [
+        { name: '电影', path: '/films', icon: 'icon-dianying'},
+        { name: '影院', path: '/cinemas', icon: 'icon-huaban'},
+        { name: '特惠', path: '/asd', icon: 'icon-tehui'},
+        { name: '我的', path: '/center', icon: 'icon-weibiaoti-'},
+      ]
+    }
+  },
   components: {
-    HelloWorld
+    NavBar,
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  @import './styles/base.css';
 </style>
