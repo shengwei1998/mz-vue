@@ -17,6 +17,14 @@ a{
 	color:#6c6c6c;
 	font-size: 12px;	
 }
+a:link,
+a:active,
+a:visited,
+a:hover {
+    background: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent;  
+}
 li{
 	list-style:none;	
 }

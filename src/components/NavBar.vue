@@ -1,9 +1,9 @@
 <template>
-    <ul>
+    <ul class="navbar-wrap">
         <li v-for="(item,index) in tabs"
             :key="index"
         >
-            <router-link :to="item.path">
+            <router-link :to="item.path" active-class="active">
                 <i :class="['iconfont',item.icon]"></i>
                 {{ item.name }}
             </router-link>
@@ -21,8 +21,8 @@ export default {
 }
 </script>
 
-<style>
-    ul{
+<style scoped>
+    .navbar-wrap{
         position: fixed;
         bottom: 0;
         left: 0;
@@ -31,8 +31,9 @@ export default {
         display: flex;
         justify-content: space-around;
         align-items: center;
+        background: #fff;
     }
-    ul li{
+    .navbar-wrap>li{
         border-top: 1px #ccc solid;
         width: 25%;
         height: 60px;
@@ -40,7 +41,7 @@ export default {
         justify-content: space-around;
         align-items: center;
     }
-    ul li a{
+    .navbar-wrap>li>a{
         text-decoration: none;
         font-size: 14px;
         display: flex;
@@ -48,10 +49,10 @@ export default {
         align-items: center;
         color: #000;
     }
-    ul li a i {
+    .navbar-wrap>li>a>i {
         font-size: 20px !important; 
     }
-    .active{
+    .navbar-wrap>li>.active{
         color: orange;
         background: #fff;
     }

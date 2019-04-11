@@ -14,7 +14,8 @@
 </template>
 
 <script>
-const Swiper = window.Swiper;
+import Swiper from 'swiper';
+import '../../node_modules/swiper/dist/css/swiper.min.css';
 export default {
     props: {
         banImg: {
@@ -32,7 +33,10 @@ export default {
         if(!this.swiper){
             this.swiper = new Swiper('.swiper-container',{
                 loop: true,
-                autoplay: true,
+                autoplay: {
+                    delay: 1000,
+                    disableOnInteraction: false,
+                },
                 pagination: {
                     el: '.swiper-pagination',
                 },
