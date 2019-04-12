@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="huan">
         <ul class="nowWrap">
             <li class="now_li"
                 v-for="item in mainList"
@@ -36,68 +36,67 @@
 </template>
 
 <script>
-/* ?cityId=440300&pageNum=1&pageSize=10&type=1&k=1539520 */
-import Axios from 'axios';
+import Axios from 'axios'
 export default {
-    data() {
-        return {
-            mainList: [],
-            pageNum: 1,
-            pageSize: 10,
-            total: 10,
-        }
-    },
-
-    computed: {
-        //总的页数
-        totalPage() {
-            return Math.ceil(this.total / this.pageSize);
-        }
-    },
-
-    methods: {
-        getList() {
-            Axios.get("https://m.maizuo.com/gateway", {
-                params: {
-                    cityId: 440300,
-                    pageNum: this.pageNum,
-                    pageSize: this.pageSize,
-                    type: 1,
-                    k: 1539520
-                },
-                headers: {
-                    'X-Client-Info': '{"a":"3000","ch":"1002","v":"1.0.0","e":"15546154461945620186257"}',
-                    'X-Host':' mall.film-ticket.film.list'
-                }
-            }).then(res => {
-                let data = res.data;
-                if(data.status === 0){
-                    this.total = data.data.total;
-                    //this.mainList = data.data.films;
-                    //追加
-                    this.mainList = this.mainList.concat(data.data.films);
-                }else{
-                    alert(data.msg);
-                }
-            })
-        },
-
-        actorsFn(actors = []) {
-            let temp = actors.map(item => {
-                return item.name;
-            })
-            return temp.join('/');
-        },
-
-        loadMore() {
-            this.pageNum++;
-            this.getList();
-        }
-    },
-
-    created() {
-        this.getList()
+  data () {
+    return {
+      mainList: [],
+      pageNum: 1,
+      pageSize: 10,
+      total: 10
     }
+  },
+
+  computed: {
+    // 总的页数
+    totalPage () {
+      return Math.ceil(this.total / this.pageSize)
+    }
+  },
+
+  methods: {
+    getList () {
+      Axios.get('https://m.maizuo.com/gateway', {
+        params: {
+          cityId: 440300,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          type: 1,
+          k: 1539520
+        },
+        headers: {
+          'X-Client-Info': '{"a":"3000","ch":"1002","v":"1.0.0","e":"15546154461945620186257"}',
+          'X-Host': ' mall.film-ticket.film.list'
+        }
+      }).then(res => {
+        let data = res.data
+        if (data.status === 0) {
+          this.total = data.data.total
+          // this.mainList = data.data.films;
+          // 追加
+          this.mainList = this.mainList.concat(data.data.films)
+        } else {
+          alert(data.msg)
+        }
+      })
+    },
+
+    actorsFn (actors = []) {
+      let temp = actors.map(item => {
+        return item.name
+      })
+      return temp.join('/')
+    },
+
+    loadMore () {
+      this.pageNum++
+      this.getList()
+    }
+  },
+
+  created () {
+    this.getList()
+  }
 }
 
 </script>

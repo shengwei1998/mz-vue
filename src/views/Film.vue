@@ -1,7 +1,7 @@
 <template>
     <div class="filmBox">
         <banner :banImg="bannerList"></banner>
-        
+
         <div class="film-wrap" :class="{'film-wrap-fixed': isFixedTabs}">
             <ul class="film_outer">
                 <li v-for="item in filmType"
@@ -14,6 +14,10 @@
                 <span></span>
             </div>
         </div>
+
+        <div class="address">
+            <router-link to="/city">深圳∨</router-link>
+        </div>
         <router-view></router-view>
     </div>
 </template>
@@ -22,74 +26,64 @@
 import axios from 'axios'
 import banner from '../components/banner'
 export default {
-    data(){
-        return {
-            isFixedTabs: false,
-            bannerList: [],
-            filmType: [
-                { id: 'nowPlaying', name: '正在热映', href: '/films/nowPlaying'},
-                { id: 'comingSoon', name: '即将上映', href: '/films/comingSoon'},
-            ],
-            cur: this.$route.path.substr(7)
+  data () {
+    return {
+      isFixedTabs: false,
+      bannerList: [],
+      filmType: [
+        { id: 'nowPlaying', name: '正在热映', href: '/films/nowPlaying' },
+        { id: 'comingSoon', name: '即将上映', href: '/films/comingSoon' }
+      ],
+      cur: this.$route.path.substr(7)
+    }
+  },
+  computed: {
+    tabInkBarStyle () {
+      let obj = {
+        transform: 'translate3d(0%, 0px, 0px)'
+      }
+      if (this.cur === 'comingSoon') {
+        obj.transform = 'translate3d(100%, 0px, 0px)'
+      }
+      return obj
+    }
+  },
+  components: {
+    banner
+  },
+  methods: {
+    getBanner () {
+      axios.get('https://m.maizuo.com/gateway?type=2&cityId=440300&k=5067437', {
+        headers: {
+          'X-Client-Info': '{"a":"3000","ch":"1002","v":"1.0.0","e":"15546154461945620186257"}',
+          'X-Host': 'mall.cfg.common-banner'
         }
-    },
-    computed: {
-        tabInkBarStyle () {
-            let obj = {
-                transform: 'translate3d(0%, 0px, 0px)'
-            }
-            if (this.cur === 'comingSoon') {
-                obj.transform = 'translate3d(100%, 0px, 0px)'
-            }
-            return obj;
+      }).then(res => {
+        let data = res.data
+        if (data.status === 0) {
+          this.bannerList = data.data
+        } else {
+          alert(data.msg)
         }
+      })
     },
-    components: {
-        banner,
-    },
-    methods: {
-        getBanner(){
-            axios.get('https://m.maizuo.com/gateway?type=2&cityId=440300&k=5067437',{
-                headers: {
-                    'X-Client-Info': '{"a":"3000","ch":"1002","v":"1.0.0","e":"15546154461945620186257"}',
-                    'X-Host': 'mall.cfg.common-banner'
-                }
-            }).then(res => {
-                let data = res.data;
-                if(data.status === 0){
-                    this.bannerList = data.data;
-                } else{
-                    alert(data.msg);
-                }
-            })
-        },
-        change(item) {
-            this.cur = item.id;
-            this.$router.push(item.href);
-        },
-        onScoll() {
-            //计算滚动条距离顶部的距离
-            let _this = this;
-            let scrollTop = document.documentElement.scrollTop;
-            /* if(scrollTop >= 210){
-                _this.isFixedTabs = true;
-            }else{
-                _this.isFixedTabs = false;
-            } */
-        }
-    },
+    change (item) {
+      this.cur = item.id
+      this.$router.push(item.href)
+    }
+  },
 
-    created(){
-        this.getBanner();
-    },
+  created () {
+    this.getBanner()
+  }
 
-    activated() {
+  /* activated() {
         window.addEventListener('scroll',this.onScoll);
     },
-    
+
     deactivated() {
         window.removeEventListener('scroll',this.onScoll);
-    }
+    } */
 }
 </script>
 
@@ -133,7 +127,7 @@ export default {
     }
     .film-wrap .miracle{
         width: 50%;
-        transition: transform .6s; 
+        transition: transform .3s;
     }
     .miracle>span{
         border-bottom: 2px solid #ff5f16;
@@ -141,5 +135,22 @@ export default {
         display: block;
         margin: auto;
         width: 56px;
+    }
+    .address{
+        position: absolute;
+        top: 18px;
+        left: 7px;
+        color: #fff;
+        z-index: 10;
+        font-size: 13px;
+        background: rgba(0,0,0,.2);
+        height: 30px;
+        line-height: 30px;
+        border-radius: 15px;
+        text-align: center;
+        padding: 0 5px;
+    }
+    .address>a{
+        color: #fff;
     }
 </style>

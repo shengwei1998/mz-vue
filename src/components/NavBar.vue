@@ -13,11 +13,11 @@
 
 <script>
 export default {
-    props: {
-        tabs: {
-            type: Array
-        }
+  props: {
+    tabs: {
+      type: Array
     }
+  }
 }
 </script>
 
@@ -50,7 +50,7 @@ export default {
         color: #000;
     }
     .navbar-wrap>li>a>i {
-        font-size: 20px !important; 
+        font-size: 20px !important;
     }
     .navbar-wrap>li>.active{
         color: orange;

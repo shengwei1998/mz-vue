@@ -1,7 +1,9 @@
 <template>
     <div id="home">
         <div class="city_header">
-            <div class="c_left"><i class="iconfont icon-X"></i></div>
+            <div class="c_left">
+                <router-link to="/films"><i class="iconfont icon-X"></i></router-link>
+            </div>
             <div class="c_right">当前城市</div>
         </div>
         <div class="city_search">
@@ -10,60 +12,112 @@
                 <input type="text" placeholder="请输入城市名或拼音" class="city_txt">
             </div>
         </div>
-        <div class="city_main">
-            <div class="main_top">GPS定位你所在城市</div>
-            <div class="mian_bottom">定位失败</div>
-            <div class="main_hot">热门城市</div>
-            <ul class="main_cen">
-                <li><a href="#">北京</a></li>
-                <li><a href="#">上海</a></li>
-                <li><a href="#">广州</a></li>
-                <li><a href="#">深圳</a></li>
+        <div class="ccc">
+            <div class="city_main">
+                <div class="main_top">GPS定位你所在城市</div>
+                <div class="mian_bottom">定位失败</div>
+                <div class="main_hot">热门城市</div>
+                <ul class="main_cen">
+                    <li><a href="#">北京</a></li>
+                    <li><a href="#">上海</a></li>
+                    <li><a href="#">广州</a></li>
+                    <li><a href="#">深圳</a></li>
+                </ul>
+            </div>
+            <ul class="main" id="mains">
+                <li
+                    v-for="item in myCitys"
+                    :key="item.py"
+                    :id="item.py"
+                >
+                    <p>{{ item.py }}</p>
+                    <ul class="two_main">
+                        <li
+                            v-for="city in item.list"
+                            :key="city.cityId"
+                        ><a href="javascript:">{{ city.name }}</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
-        <ul class="main">
-            <li>
-                <p>A</p>
-                <ul class="two_main">
-                    <li><a href="#">按样</a></li>
-                    <li><a href="#">按样</a></li>
-                    <li><a href="#">按样</a></li>
-                    <li><a href="#">按样</a></li>
-                    <li><a href="#">按样</a></li>
-                    <li><a href="#">按样</a></li>
-                </ul>
-            </li>
-        </ul>
         <div class="city_nav">
             <ul>
-                <li>A</li>
-                <li>B</li>
-                <li>C</li>
-                <li>D</li>
-                <li>E</li>
-                <li>F</li>
-                <li>G</li>
-                <li>H</li>
-                <li>I</li>
-                <li>J</li>
-                <li>K</li>
-                <li>L</li>
-                <li>M</li>
-                <li>N</li>
-                <li>O</li>
-                <li>P</li>
-                <li>Q</li>
-                <li>R</li>
-                <li>S</li>
-                <li>T</li>
-                <li>W</li>
-                <li>X</li>
-                <li>Y</li>
-                <li>Z</li>
+                <li
+                    v-for="item in pys"
+                    :key="item"
+                    @click="fn1(item)"
+                >{{ item }}</li>
             </ul>
         </div>
     </div>
 </template>
+
+<script>
+import Axios from 'axios'
+export default {
+  data () {
+    return {
+      cityList: []
+    }
+  },
+
+  computed: {
+    myCitys () {
+      var index = 0
+      var flag = {}
+      var result = []
+      this.cityList.forEach(item => {
+        var py = item.pinyin.substr(0, 1).toUpperCase()
+        if (flag[py]) {
+          result[flag[py] - 1].list.push(item)
+        } else {
+          var obj = {
+            py: py,
+            list: [ item ]
+          }
+          flag[py] = ++index
+          result.push(obj)
+        }
+      })
+      result.sort((a, b) => {
+        return a.py.charCodeAt() - b.py.charCodeAt()
+      })
+      return result
+    },
+    pys () {
+      return this.myCitys.map(item => {
+        return item.py
+      })
+    }
+  },
+
+  methods: {
+    getCityList () {
+      Axios.get('https://m.maizuo.com/gateway?k=2768064', {
+        headers: {
+          'X-Client-Info': '{"a":"3000","ch":"1002","v":"1.0.0","e":"15546154461945620186257"}',
+          'X-Host': 'mall.film-ticket.city.list'
+        }
+      }).then(res => {
+        let data = res.data
+        if (data.status === 0) {
+          this.cityList = data.data.cities
+        } else {
+          alert(data.msg)
+        }
+      })
+    },
+    fn1 (py) {
+      var el = document.getElementById(py)
+      var heightTop = el.offsetTop + 200
+      document.documentElement.scrollTop = heightTop
+    }
+  },
+  created () {
+    this.getCityList()
+  }
+}
+</script>
 
 <style>
     body{
@@ -134,10 +188,13 @@
         width: calc(100% - 65px);
         border: 0;
     }
+    .ccc{
+        position: relative;
+        padding-top: 94px;
+    }
    .city_main{
         position: relative;
         overflow: hidden;
-        padding-top: 94px;
         background: #fff;
         background-color: #fff;
         padding-left: 15px;
@@ -175,14 +232,19 @@
     .city_main .main_cen>li{
         width: calc((100vw - 78px)/3);
         text-align: center;
-        
+
         margin: 8px;
         box-sizing: border-box;
         float: left;
         background-color: #f4f4f4;
         line-height: 30px;
         border-radius: 3px;
-    } 
+    }
+    .main{
+        position: absolute;
+        top: 300px;
+        left: 0;
+    }
     .main>li>p{
         background-color: #f4f4f4;
         color: #797d82;
